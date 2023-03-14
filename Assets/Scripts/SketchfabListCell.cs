@@ -67,6 +67,7 @@ namespace DemoAR
 
         private void OnDestroy()
         {
+            StopAllCoroutines();
             Clear();
         }
     }

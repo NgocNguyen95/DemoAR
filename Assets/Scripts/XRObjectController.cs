@@ -6,31 +6,42 @@ namespace DemoAR
 {
     public class XRObjectController : MonoBehaviour
     {
-        private int _refSize = 5;
+        private int _optimumObjectSize = 5;
+        private Bounds _objectBound;
 
 
         private void Start()
         {
+            OptimizeObjectSize();
+        }
 
+
+        private void AddBoxCollider()
+        {
+            var boxCollider = gameObject.AddComponent<BoxCollider>();
+            boxCollider.size = _objectBound.size;
         }
 
 
         private void OptimizeObjectSize()
         {
-            var objectSize = new Vector3();
+            _objectBound = BoundingBoxCalculator.CalculateBoundingBox(gameObject);
 
-            Debug.Log($"[{nameof(XRObjectController)}] {nameof(OptimizeObjectSize)} object size: {objectSize}");
+            Debug.Log($"[{nameof(XRObjectController)}] {nameof(OptimizeObjectSize)} object size: {_objectBound.size}");
 
-            List<float> boundSizes = new List<float>() { objectSize.x, objectSize.y, objectSize.z };
+            List<float> boundSizes = new List<float>() { _objectBound.size.x, _objectBound.size.y, _objectBound.size.z };
             var maxSize = boundSizes.Max();
 
-            if (maxSize < _refSize)
-                return;
+            if (maxSize > _optimumObjectSize)
+            {
+                var updatedScale = 1 / (maxSize / _optimumObjectSize);
 
-            var updatedScale = 1 / (maxSize / _refSize);
+                gameObject.transform.GetChild(0).transform.localScale = new Vector3(updatedScale, updatedScale, updatedScale);
 
-            gameObject.transform.GetChild(0).transform.localScale = new Vector3(updatedScale, updatedScale, updatedScale);
+                _objectBound = BoundingBoxCalculator.CalculateBoundingBox(gameObject);
+            }
 
+            AddBoxCollider();
             UpdatePosition();
         }
 
