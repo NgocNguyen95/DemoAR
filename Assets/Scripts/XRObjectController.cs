@@ -51,7 +51,11 @@ namespace DemoAR
         private void ConfigInteractions()
         {
             _translationInteractable.objectGestureTranslationMode = GestureTransformationUtility.GestureTranslationMode.Any;
+
             _selectionInteractable.selectionVisualization = _selectBox;
+
+            _scaleInteractable.minScale = 0.25f;
+            _scaleInteractable.maxScale = 2f;
         }
 
 
@@ -84,7 +88,10 @@ namespace DemoAR
         {
             var updatedPosition = Globals.mainCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 3f));
 
-            gameObject.transform.localPosition = updatedPosition;
+            if (gameObject.transform.parent != null)
+            {
+                gameObject.transform.parent.localPosition = updatedPosition;
+            }
         }
     }
 }

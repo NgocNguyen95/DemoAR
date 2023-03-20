@@ -41,8 +41,8 @@ namespace DemoAR
                 {
                     if (obj != null)
                     {
-                        Vector3 updatedPosition = Globals.mainCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 3f));
-                        obj.transform.position = updatedPosition;
+                        var parentObject = new GameObject("GLBModel");
+                        obj.transform.parent = parentObject.transform;
 
                         Animation animation = obj.GetComponent<Animation>();
                         if (animation != null)
