@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.XR.Interaction.Toolkit.AR;
 
 namespace DemoAR
 {
@@ -8,6 +9,12 @@ namespace DemoAR
     {
         private int _optimumObjectSize = 5;
         private Bounds _objectBound;
+        private GameObject _selectBox;
+
+        private ARRotationInteractable _rotationInteractable;
+        private ARSelectionInteractable _selectionInteractable;
+        private ARScaleInteractable _scaleInteractable;
+        private ARTranslationInteractable _translationInteractable;
 
 
         private void Start()
@@ -20,6 +27,31 @@ namespace DemoAR
         {
             var boxCollider = gameObject.AddComponent<BoxCollider>();
             boxCollider.size = _objectBound.size;
+        }
+
+
+        private void AddInteractions()
+        {
+            _selectionInteractable = gameObject.AddComponent<ARSelectionInteractable>();
+            _translationInteractable = gameObject.AddComponent<ARTranslationInteractable>();
+            _rotationInteractable = gameObject.AddComponent<ARRotationInteractable>();
+            _scaleInteractable = gameObject.AddComponent<ARScaleInteractable>();
+
+            ConfigInteractions();
+        }
+
+
+        private void AddSelectBox()
+        {
+            _selectBox = Instantiate(GameManager.Instance.SelectBoxPrefab, gameObject.transform);
+            _selectBox.transform.localScale = _objectBound.size;
+        }
+
+
+        private void ConfigInteractions()
+        {
+            _translationInteractable.objectGestureTranslationMode = GestureTransformationUtility.GestureTranslationMode.Any;
+            _selectionInteractable.selectionVisualization = _selectBox;
         }
 
 
@@ -41,8 +73,10 @@ namespace DemoAR
                 _objectBound = BoundingBoxCalculator.CalculateBoundingBox(gameObject);
             }
 
+            AddSelectBox();
             AddBoxCollider();
             UpdatePosition();
+            AddInteractions();
         }
 
 
