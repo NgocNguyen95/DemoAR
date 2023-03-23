@@ -27,6 +27,7 @@ namespace DemoAR
         {
             var boxCollider = gameObject.AddComponent<BoxCollider>();
             boxCollider.size = _objectBound.size;
+            boxCollider.center = _objectBound.center;
         }
 
 
@@ -45,6 +46,7 @@ namespace DemoAR
         {
             _selectBox = Instantiate(GameManager.Instance.SelectBoxPrefab, gameObject.transform);
             _selectBox.transform.localScale = _objectBound.size;
+            _selectBox.transform.localPosition = _objectBound.center;
         }
 
 
